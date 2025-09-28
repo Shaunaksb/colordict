@@ -7,7 +7,7 @@ body {
 h1 {
   text-align: center;
   margin-bottom: 40px;
-  color: #f37420; /* Orange */
+  color: #d96629; /* English Red */
 }
 .combo-grid {
   display: grid;
@@ -15,7 +15,7 @@ h1 {
   gap: 30px;
 }
 .plate {
-  border: 1px solid #b73f74; /* Rosolanc Purple */
+  border: 1px solid #ebd3a2; /* Ivory Buff */
   border-radius: 6px;
   overflow: hidden;
   background: #282828; /* Slightly lighter background */
@@ -33,11 +33,11 @@ h1 {
   padding: 8px 10px;
   font-size: 0.85em;
   background: transparent;
-  border-top: 1px solid #b73f74; /* Rosolanc Purple */
+  border-top: 1px solid #ebd3a2; /* Ivory Buff */
   color: #E0E0E0;
 }
 .plate-info strong {
-    color: #f37420; /* Orange */
+    color: #d96629; /* English Red */
 }
 .modal-overlay {
   position: fixed;
@@ -67,13 +67,13 @@ h1 {
   overflow-y: auto;
   transform: translateY(-50px);
   transition: transform 0.3s;
-  border: 1px solid #b73f74;
+  border: 1px solid #ebd3a2;
 }
 .modal-content h2 {
     margin: 0 0 20px 0;
     font-size: 22px;
     font-weight: 600;
-    color: #f37420; /* Orange */
+    color: #d96629; /* English Red */
 }
 .modal-overlay.active {
   opacity: 1;
@@ -103,7 +103,7 @@ h1 {
   margin-bottom: 12px;
 }
 .modal-color .hex-code {
-    color: #b73f74; /* Rosolanc Purple */
+    color: #ebd3a2; /* Ivory Buff */
 }
 .close-btn {
   position: absolute;
