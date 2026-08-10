@@ -40,6 +40,13 @@ jobs:
           name: colordict-delivery-build
           path: dist/
 
+      - name: Add Job Summary with PR Link
+        if: always()
+        run: |
+          echo "## Continuous Delivery Summary" >> $GITHUB_STEP_SUMMARY
+          echo "- **Status**: Unit tests & build completed." >> $GITHUB_STEP_SUMMARY
+          echo "- **Deploy Link**: [Click to Open Pull Request to Main](${{ github.server_url }}/${{ github.repository }}/compare/main...staging-delivery?expand=1)" >> $GITHUB_STEP_SUMMARY
+
       - name: Create Pull Request to Main
         if: github.ref == 'refs/heads/staging-delivery' && github.event_name == 'push'
         env:
@@ -54,4 +61,4 @@ jobs:
           - JS Unit Tests passed successfully.
           - Release artifact \`colordict-delivery-build\` compiled and attached to this run.
           
-          Merging this Pull Request will trigger **Continuous Deployment** to GitHub Pages." || echo "Pull Request already open or branches up to date."
+          Merging this Pull Request will trigger **Continuous Deployment** to GitHub Pages." || echo "Pull Request already open, branches up to date, or GitHub Actions PR permission disabled."
