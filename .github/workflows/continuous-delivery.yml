@@ -18,10 +18,10 @@ jobs:
 
     steps:
       - name: Checkout Repository
-        uses: actions/checkout@v4
+        uses: actions/checkout@v7
 
       - name: Setup Node.js
-        uses: actions/setup-node@v4
+        uses: actions/setup-node@v7
         with:
           node-version: 26
 
@@ -34,7 +34,7 @@ jobs:
           cp index.html script.js style.css colors.json dist/
 
       - name: Upload Delivery Artifact
-        uses: actions/upload-artifact@v4
+        uses: actions/upload-artifact@v7
         with:
           name: colordict-delivery-build
           path: dist/
@@ -48,16 +48,16 @@ jobs:
 
       - name: Create Pull Request to Main
         if: github.ref == 'refs/heads/staging-delivery' && github.event_name == 'push'
-        env:
-          GH_TOKEN: ${{ secrets.GITHUB_TOKEN }}
-        run: |
-          gh pr create \
-            --base main \
-            --head staging-delivery \
-            --title "Delivery Release: Sync staging-delivery to main" \
-            --body "### Automated Continuous Delivery Build
+        uses: peter-evans/create-pull-request@v7
+        with:
+          token: ${{ secrets.GITHUB_TOKEN }}
+          branch: "staging-delivery"
+          base: "main"
+          title: "Delivery Release: Sync staging-delivery to main"
+          body: |
+            ### Automated Continuous Delivery Build
 
-          - JS Unit Tests passed successfully.
-          - Release artifact \`colordict-delivery-build\` compiled and attached to this run.
-          
-          Merging this Pull Request will trigger **Continuous Deployment** to GitHub Pages." || echo "Pull Request already open, branches up to date, or GitHub Actions PR permission disabled."
+            - JS Unit Tests passed successfully.
+            - Release artifact `colordict-delivery-build` compiled and attached to this run.
+
+            Merging this Pull Request will trigger **Continuous Deployment** to GitHub Pages.
