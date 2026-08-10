@@ -1,0 +1,36 @@
+name: Continuous Delivery
+
+on:
+  push:
+    branches:
+      - "staging-delivery"
+  pull_request:
+    branches:
+      - "staging-delivery"
+
+jobs:
+  continuous-delivery:
+    runs-on: ubuntu-latest
+
+    steps:
+      - name: Checkout Repository
+        uses: actions/checkout@v4
+
+      - name: Setup Node.js
+        uses: actions/setup-node@v4
+        with:
+          node-version: 20
+
+      - name: Run JS Unit Tests
+        run: npm test
+
+      - name: Build & Package Delivery Artifact
+        run: |
+          mkdir -p dist
+          cp index.html script.js style.css colors.json dist/
+
+      - name: Upload Delivery Artifact
+        uses: actions/upload-artifact@v4
+        with:
+          name: colordict-delivery-build
+          path: dist/

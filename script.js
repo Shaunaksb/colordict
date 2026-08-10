@@ -1,10 +1,10 @@
-async function loadColors() {
-  const response = await fetch("colors.json");
-  const colors = await response.json();
-
+function buildColorMap(colors) {
   const colorMap = {};
   colors.forEach((c, i) => colorMap[i] = c);
+  return colorMap;
+}
 
+function buildComboMap(colors) {
   const comboMap = {};
   colors.forEach((c, i) => {
     c.combinations.forEach(comboId => {
@@ -12,6 +12,15 @@ async function loadColors() {
       comboMap[comboId].add(i);
     });
   });
+  return comboMap;
+}
+
+async function loadColors() {
+  const response = await fetch("colors.json");
+  const colors = await response.json();
+
+  const colorMap = buildColorMap(colors);
+  const comboMap = buildComboMap(colors);
 
   const comboGrid = document.getElementById("comboGrid");
   const modal = document.getElementById("colorModal");
@@ -89,4 +98,10 @@ async function loadColors() {
   });
 }
 
-loadColors();
+if (typeof window !== "undefined" && typeof document !== "undefined") {
+  loadColors();
+}
+
+if (typeof module !== "undefined" && module.exports) {
+  module.exports = { buildColorMap, buildComboMap };
+}

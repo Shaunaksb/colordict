@@ -1,0 +1,12 @@
+{
+  "name": "colordict",
+  "version": "1.0.0",
+  "description": "A Dictionary of Color Combinations",
+  "main": "script.js",
+  "scripts": {
+    "test": "node --test"
+  },
+  "keywords": [],
+  "author": "",
+  "license": "ISC"
+}
