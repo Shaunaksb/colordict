@@ -3,10 +3,14 @@ name: Continuous Deployment
 on:
   push:
     branches:
+      - "staging-deployment"
       - "main"
+  pull_request:
+    branches:
+      - "staging-deployment"
 
 permissions:
-  contents: read
+  contents: write
   pages: write
   id-token: write
 
@@ -20,6 +24,8 @@ jobs:
     steps:
       - name: Checkout Repository
         uses: actions/checkout@v4
+        with:
+          fetch-depth: 0
 
       - name: Setup Node.js
         uses: actions/setup-node@v4
@@ -28,6 +34,15 @@ jobs:
 
       - name: Execute JS Unit Tests
         run: npm test
+
+      - name: Auto-merge staging-deployment into main
+        if: github.ref == 'refs/heads/staging-deployment' && github.event_name == 'push'
+        env:
+          GH_TOKEN: ${{ secrets.GITHUB_TOKEN }}
+        run: |
+          git config user.name "github-actions[bot]"
+          git config user.email "github-actions[bot]@users.noreply.github.com"
+          git push origin HEAD:main || echo "Auto-merge to main completed or up to date."
 
       - name: Setup GitHub Pages
         if: github.ref == 'refs/heads/main'
