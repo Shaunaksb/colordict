@@ -7,6 +7,11 @@ on:
   pull_request:
     branches:
       - "staging-delivery"
+      - "main"
+
+permissions:
+  contents: write
+  pull-requests: write
 
 jobs:
   continuous-delivery:
@@ -19,7 +24,7 @@ jobs:
       - name: Setup Node.js
         uses: actions/setup-node@v4
         with:
-          node-version: 20
+          node-version: 26
 
       - name: Run JS Unit Tests
         run: npm test
@@ -34,3 +39,19 @@ jobs:
         with:
           name: colordict-delivery-build
           path: dist/
+
+      - name: Create Pull Request to Main
+        if: github.ref == 'refs/heads/staging-delivery' && github.event_name == 'push'
+        env:
+          GH_TOKEN: ${{ secrets.GITHUB_TOKEN }}
+        run: |
+          gh pr create \
+            --base main \
+            --head staging-delivery \
+            --title "🚀 Delivery Release: Sync staging-delivery to main" \
+            --body "### Automated Continuous Delivery Build
+
+          - ✅ JS Unit Tests passed successfully.
+          - 📦 Release artifact \`colordict-delivery-build\` compiled and attached to this run.
+          
+          Merging this Pull Request will trigger **Continuous Deployment** to GitHub Pages." || echo "Pull Request already open or branches up to date."

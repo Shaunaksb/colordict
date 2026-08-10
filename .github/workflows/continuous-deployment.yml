@@ -3,7 +3,7 @@ name: Continuous Deployment
 on:
   push:
     branches:
-      - "staging-deployment"
+      - "main"
 
 permissions:
   contents: read
@@ -24,7 +24,7 @@ jobs:
       - name: Setup Node.js
         uses: actions/setup-node@v4
         with:
-          node-version: 20
+          node-version: 26
 
       - name: Execute JS Unit Tests
         run: npm test
