@@ -28,16 +28,15 @@ jobs:
       - name: Run JS Unit Tests
         run: npm test
 
-      - name: Build & Package Delivery Artifact
-        run: |
-          mkdir -p dist
-          cp index.html script.js style.css colors.json dist/
-
       - name: Upload Delivery Artifact
         uses: actions/upload-artifact@v7
         with:
           name: colordict-delivery-build
-          path: dist/
+          path: |
+            index.html
+            script.js
+            style.css
+            colors.json
 
       - name: Add Job Summary with PR Link
         if: always()
@@ -61,3 +60,4 @@ jobs:
             - Release artifact `colordict-delivery-build` compiled and attached to this run.
 
             Merging this Pull Request will trigger **Continuous Deployment** to GitHub Pages.
+  
