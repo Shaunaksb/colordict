@@ -28,16 +28,15 @@ jobs:
       - name: Run JS Unit Tests
         run: npm test
 
-      - name: Build & Package Delivery Artifact
-        run: |
-          mkdir -p dist
-          cp index.html script.js style.css colors.json dist/
-
       - name: Upload Delivery Artifact
         uses: actions/upload-artifact@v7
         with:
           name: colordict-delivery-build
-          path: dist/
+          path: |
+            index.html
+            script.js
+            style.css
+            colors.json
 
       - name: Add Job Summary with PR Link
         if: always()
@@ -48,16 +47,17 @@ jobs:
 
       - name: Create Pull Request to Main
         if: github.ref == 'refs/heads/staging-delivery' && github.event_name == 'push'
-        uses: peter-evans/create-pull-request@v7
-        with:
-          token: ${{ secrets.GITHUB_TOKEN }}
-          branch: "staging-delivery"
-          base: "main"
-          title: "Delivery Release: Sync staging-delivery to main"
-          body: |
-            ### Automated Continuous Delivery Build
+        env:
+          GH_TOKEN: ${{ secrets.GITHUB_TOKEN }}
+        run: |
+          gh pr create \
+            --head staging-delivery \
+            --base main \
+            --title "Delivery Release: Sync staging-delivery to main" \
+            --body "### Automated Continuous Delivery Build
 
-            - JS Unit Tests passed successfully.
-            - Release artifact `colordict-delivery-build` compiled and attached to this run.
+          - JS Unit Tests passed successfully.
+          - Release artifact \`colordict-delivery-build\` compiled and attached to this run.
 
-            Merging this Pull Request will trigger **Continuous Deployment** to GitHub Pages.
+          Merging this Pull Request will trigger **Continuous Deployment** to GitHub Pages." || echo "PR already exists or no changes to merge."
+  
